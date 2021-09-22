@@ -1,21 +1,11 @@
 function deepClone(target) {
-  let clone;
+  let clone = null;
   if (typeof target === 'object' && target !== null) {
-    if (Array.isArray(target)) {
-      // Array copy
-      clone = [];
-      target.forEach(el => {
-        clone.push(deepClone(el));
-      });
-    } else {
-      // object copy
-      clone = {};
-      for (const key in target) {
-        if (Object.hasOwnProperty.call(target, key)) {
-          clone[key] = deepClone(target[key]);
-        }
-      }
-    }
+    // Array or Object
+    clone = target.constructor === Array ? [] : {};
+    Object.keys(target).forEach(key => {
+      clone[key] = deepClone(target[key]);
+    });
   } else {
     // not object(primitive, function, null, ...)
     clone = target;
