@@ -17,11 +17,11 @@ function isEqual(arg1, arg2) {
   // Object, Array / recursive
   const keys = Object.keys(arg1);
   if (keys.length !== Object.keys(arg2).length) return false;
-  let flag = true;
-  keys.forEach(key => {
-    if (!isEqual(arg1[key], arg2[key])) flag = false;
-  });
-  return flag;
+
+  for (const key of keys) {
+    if (!isEqual(arg1[key], arg2[key])) return false;
+  }
+  return true;
 }
 
 export default isEqual;
