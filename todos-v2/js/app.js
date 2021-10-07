@@ -4,6 +4,7 @@ import Todo from './state.js';
 const $newTodoInput = document.querySelector('.new-todo');
 const $todoList = document.querySelector('.todo-list');
 
+// rendering function
 /**
  * @todo 렌더링 최적화 고민
  */
@@ -37,9 +38,28 @@ const renderAdded = ({ id, content, completed }) => {
   $todoList.insertBefore($added, $todoList.firstChild);
 };
 
+const renderEdited = (id, content) => {
+  const $edited = [...$todoList.children].filter(todo => todo.dataset.id === id)[0];
+  $edited.firstElementChild.children[1].innerText = content;
+  $edited.lastElementChild.setAttribute('value', content);
+};
+
+// helper
 const init = () => {
   // render
   $todoList.innerHTML = render(Todo.getTodo());
+};
+
+const updateTodo = $eventTarget => {
+  $eventTarget.parentNode.classList.remove('editing');
+
+  const { id } = $eventTarget.parentNode.dataset;
+  const content = $eventTarget.value;
+  if (!content) {
+    $eventTarget.getAttribute('value') !== content && Todo.updateTodo(id, content);
+    $eventTarget.setAttribute('value', content);
+  }
+  renderEdited(id, content);
 };
 
 // Add Event Handler
@@ -47,7 +67,7 @@ window.addEventListener('DOMContentLoaded', init);
 
 // Add new todo
 $newTodoInput.onkeypress = e => {
-  // use keypress event because fo Korean issue
+  // use keypress event because fo Hangul issue
   // then prevent repeat press
   if (e.repeat || e.key !== 'Enter') return;
 
@@ -94,12 +114,7 @@ $todoList.ondblclick = e => {
 
   // Blur event handler
   $todo.lastElementChild.onblur = e => {
-    e.target.parentNode.classList.remove('editing');
-
-    const { id } = e.target.parentNode.dataset;
-    const content = e.target.value;
-    e.target.getAttribute('value') !== content && Todo.updateTodo(id, content);
-    e.target.setAttribute('value', content);
+    updateTodo(e.target);
     // Call once, remove event handler
     e.target.onblur = null;
   };
@@ -108,14 +123,9 @@ $todoList.ondblclick = e => {
 // End of edit todo event
 $todoList.onkeypress = e => {
   if (!e.target.classList.contains('edit')) return;
-  // use keypress event because fo Korean issue
+  // use keypress event because fo Hangul issue
   // then prevent repeat press
   if (e.repeat || e.key !== 'Enter') return;
 
-  e.target.parentNode.classList.remove('editing');
-
-  const { id } = e.target.parentNode.dataset;
-  const content = e.target.value;
-  e.target.getAttribute('value') !== content && Todo.updateTodo(id, content);
-  e.target.setAttribute('value', content);
+  updateTodo(e.target);
 };
