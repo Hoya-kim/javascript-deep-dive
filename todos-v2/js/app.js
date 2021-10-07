@@ -4,6 +4,10 @@ import Todo from './state.js';
 const $newTodoInput = document.querySelector('.new-todo');
 const $todoList = document.querySelector('.todo-list');
 const $todoCount = document.querySelector('.todo-count');
+const $anchorAll = document.getElementById('all');
+const $anchorActive = document.getElementById('active');
+const $anchorCompleted = document.getElementById('completed');
+const $clearCompleted = document.querySelector('.clear-completed');
 
 // rendering function
 /**
@@ -43,6 +47,14 @@ const renderEdited = (id, content) => {
   const $edited = [...$todoList.children].filter(todo => todo.dataset.id === id)[0];
   $edited.firstElementChild.children[1].innerText = content;
   $edited.lastElementChild.setAttribute('value', content);
+};
+
+const renderSelected = selected => {
+  const filtered =
+    selected === 'active'
+      ? Todo.getTodo().filter(todo => !todo.completed)
+      : Todo.getTodo().filter(todo => todo.completed);
+  return render(filtered);
 };
 
 const updateCount = () => {
@@ -137,4 +149,43 @@ $todoList.onkeypress = e => {
   if (e.repeat || e.key !== 'Enter') return;
 
   updateTodo(e.target);
+};
+
+$anchorAll.onclick = e => {
+  if (e.target.classList.contains('selected')) return;
+  e.target.classList.add('selected');
+  $anchorActive.classList.remove('selected');
+  $anchorCompleted.classList.remove('selected');
+
+  $todoList.innerHTML = render(Todo.getTodo());
+};
+
+$anchorActive.onclick = e => {
+  if (e.target.classList.contains('selected')) return;
+  e.target.classList.add('selected');
+  $anchorAll.classList.remove('selected');
+  $anchorCompleted.classList.remove('selected');
+
+  $todoList.innerHTML = renderSelected('active');
+};
+
+$anchorCompleted.onclick = e => {
+  if (e.target.classList.contains('selected')) return;
+  e.target.classList.add('selected');
+  $anchorAll.classList.remove('selected');
+  $anchorActive.classList.remove('selected');
+
+  $todoList.innerHTML = renderSelected('completed');
+};
+
+$clearCompleted.onclick = e => {
+  const confirmed = confirm('완료항목을 삭제하시겠습니까?');
+  if (!confirmed) return;
+
+  Todo.getTodo().forEach(todo => {
+    if (!todo.completed) return;
+    Todo.removeTodo(todo.id);
+  });
+  $todoList.innerHTML = render(Todo.getTodo());
+  updateCount();
 };
