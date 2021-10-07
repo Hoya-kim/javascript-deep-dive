@@ -58,7 +58,7 @@ const renderSelected = selected => {
 };
 
 const updateCount = () => {
-  const count = Todo.getTodoCount();
+  const count = $todoList.children.length;
   $todoCount.innerText = `${count} ${count > 1 ? 'items' : 'item'} left`;
 };
 
@@ -152,30 +152,30 @@ $todoList.onkeypress = e => {
 };
 
 $anchorAll.onclick = e => {
-  if (e.target.classList.contains('selected')) return;
   e.target.classList.add('selected');
   $anchorActive.classList.remove('selected');
   $anchorCompleted.classList.remove('selected');
 
   $todoList.innerHTML = render(Todo.getTodo());
+  updateCount();
 };
 
 $anchorActive.onclick = e => {
-  if (e.target.classList.contains('selected')) return;
   e.target.classList.add('selected');
   $anchorAll.classList.remove('selected');
   $anchorCompleted.classList.remove('selected');
 
   $todoList.innerHTML = renderSelected('active');
+  updateCount();
 };
 
 $anchorCompleted.onclick = e => {
-  if (e.target.classList.contains('selected')) return;
   e.target.classList.add('selected');
   $anchorAll.classList.remove('selected');
   $anchorActive.classList.remove('selected');
 
   $todoList.innerHTML = renderSelected('completed');
+  updateCount();
 };
 
 $clearCompleted.onclick = e => {
@@ -186,6 +186,7 @@ $clearCompleted.onclick = e => {
     if (!todo.completed) return;
     Todo.removeTodo(todo.id);
   });
-  $todoList.innerHTML = render(Todo.getTodo());
-  updateCount();
+
+  const clickEvent = new MouseEvent('click');
+  $anchorAll.dispatchEvent(clickEvent);
 };
