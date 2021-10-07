@@ -2,6 +2,7 @@ import Todo from './state.js';
 
 // DOM nodes
 const $newTodoInput = document.querySelector('.new-todo');
+const $toggleAll = document.getElementById('toggle-all');
 const $todoList = document.querySelector('.todo-list');
 const $todoCount = document.querySelector('.todo-count');
 const $anchorAll = document.getElementById('all');
@@ -98,6 +99,16 @@ $newTodoInput.onkeypress = e => {
   const newTodo = Todo.addTodo(content);
   renderAdded(newTodo);
   updateCount();
+};
+
+$toggleAll.onchange = e => {
+  const completed = e.target.checked;
+  Todo.toggleAll(completed);
+
+  [...$todoList.children].forEach(li => {
+    if (completed) li.firstElementChild.firstElementChild.setAttribute('checked', 'checked');
+    else li.firstElementChild.firstElementChild.removeAttribute('checked');
+  });
 };
 
 // toggle todo

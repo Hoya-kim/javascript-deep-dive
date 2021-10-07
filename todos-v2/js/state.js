@@ -27,12 +27,17 @@ const updateTodo = (id, content) => {
   todos = todos.map(todo => (todo.id === +id ? { ...todo, content } : todo));
 };
 
+const toggleAll = completed => {
+  todos = todos.map(todo => ({ ...todo, completed }));
+};
+
 const Todo = {
   getTodo,
   addTodo,
   toggleTodo,
   removeTodo,
   updateTodo,
+  toggleAll,
 };
 
 export default Todo;
