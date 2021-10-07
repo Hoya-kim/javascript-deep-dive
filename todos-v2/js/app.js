@@ -46,7 +46,8 @@ const renderEdited = (id, content) => {
 };
 
 const updateCount = () => {
-  $todoCount.innerText = `${Todo.getTodoCount()} item left`;
+  const count = Todo.getTodoCount();
+  $todoCount.innerText = `${count} ${count > 1 ? 'items' : 'item'} left`;
 };
 
 // helper
