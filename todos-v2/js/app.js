@@ -3,6 +3,7 @@ import Todo from './state.js';
 // DOM nodes
 const $newTodoInput = document.querySelector('.new-todo');
 const $todoList = document.querySelector('.todo-list');
+const $todoCount = document.querySelector('.todo-count');
 
 // rendering function
 /**
@@ -44,10 +45,15 @@ const renderEdited = (id, content) => {
   $edited.lastElementChild.setAttribute('value', content);
 };
 
+const updateCount = () => {
+  $todoCount.innerText = `${Todo.getTodoCount()} item left`;
+};
+
 // helper
 const init = () => {
   // render
   $todoList.innerHTML = render(Todo.getTodo());
+  updateCount();
 };
 
 const updateTodo = $eventTarget => {
@@ -78,6 +84,7 @@ $newTodoInput.onkeypress = e => {
   // @todo async await
   const newTodo = Todo.addTodo(content);
   renderAdded(newTodo);
+  updateCount();
 };
 
 // toggle todo
@@ -98,6 +105,7 @@ $todoList.onclick = e => {
   // @todo async await
   Todo.removeTodo($target.dataset.id);
   $todoList.removeChild($target);
+  updateCount();
 };
 
 // Editing mode

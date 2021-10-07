@@ -27,12 +27,15 @@ const updateTodo = (id, content) => {
   todos = todos.map(todo => (todo.id === +id ? { ...todo, content } : todo));
 };
 
+const getTodoCount = () => todos.length;
+
 const Todo = {
   getTodo,
   addTodo,
   toggleTodo,
   removeTodo,
   updateTodo,
+  getTodoCount,
 };
 
 export default Todo;
