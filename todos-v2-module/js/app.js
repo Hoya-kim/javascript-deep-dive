@@ -1,7 +1,4 @@
-// state
-// 상태가 바뀌면 리렌더링이 되야 한다
-let todos = [];
-let currentFilter = 'all';
+import Todo from './state.js';
 
 // DOM Nodes
 const $newTodo = document.querySelector('.new-todo');
@@ -14,6 +11,9 @@ const $filters = document.querySelector('.filters');
 const $clearCompleted = document.querySelector('.clear-completed');
 
 const render = () => {
+  const todos = Todo.getTodos();
+  const currentFilter = Todo.getFilter();
+
   const _todos = todos.filter(todo =>
     currentFilter === 'completed'
       ? todo.completed
@@ -48,70 +48,29 @@ const render = () => {
   $clearCompleted.classList.toggle('hidden', completedTodos.length === 0);
 };
 
-// state function
-const setTodos = newTodos => {
-  todos = newTodos;
-  console.log('[TODOS]:', todos);
-  render();
-};
-
-const setFilter = newFilter => {
-  currentFilter = newFilter;
-  console.log('[FILTER]: ', currentFilter);
-  render();
-};
-
-const fetchTodos = () => {
-  setTodos([
-    { id: 3, content: 'JavaScript', completed: false },
-    { id: 2, content: 'CSS', completed: true },
-    { id: 1, content: 'HTML', completed: false },
-  ]);
-};
-
-const generateTodoId = () => Math.max(...todos.map(todo => todo.id), 0) + 1;
-
-const addTodo = content => {
-  setTodos([{ id: generateTodoId(), content, completed: false }, ...todos]);
-};
-
-const toggleTodoCompleted = id => {
-  setTodos(todos.map(todo => (todo.id === +id ? { ...todo, completed: !todo.completed } : todo)));
-};
-
-const toggleAllTodosCompleted = completed => {
-  setTodos(todos.map(todo => ({ ...todo, completed })));
-};
-
-const updateTodoContent = (id, content) => {
-  setTodos(todos.map(todo => (todo.id === +id ? { ...todo, content } : todo)));
-};
-
-const removeTodo = id => {
-  setTodos(todos.filter(todo => todo.id !== +id));
-};
-
-const removeAllCompletedTodos = () => {
-  setTodos(todos.filter(todo => !todo.completed));
-};
-
 // Event bindings
-window.addEventListener('DOMContentLoaded', fetchTodos);
+window.addEventListener('DOMContentLoaded', () => {
+  Todo.fetchTodos();
+  render();
+});
 
 $newTodo.onkeyup = e => {
   if (e.key !== 'Enter') return;
   const content = $newTodo.value.trim();
-  if (content) addTodo(content);
+  if (content) Todo.addTodo(content);
   $newTodo.value = '';
+  render();
 };
 
 $todoList.onchange = e => {
   if (!e.target.classList.contains('toggle')) return;
-  toggleTodoCompleted(e.target.closest('li').dataset.id);
+  Todo.toggleTodoCompleted(e.target.closest('li').dataset.id);
+  render();
 };
 
 $toggleAll.onchange = e => {
-  toggleAllTodosCompleted($toggleAll.checked);
+  Todo.toggleAllTodosCompleted($toggleAll.checked);
+  render();
 };
 
 $todoList.ondblclick = e => {
@@ -121,12 +80,14 @@ $todoList.ondblclick = e => {
 
 $todoList.onkeyup = e => {
   if (e.key !== 'Enter') return;
-  updateTodoContent(e.target.parentNode.dataset.id, e.target.value);
+  Todo.updateTodoContent(e.target.parentNode.dataset.id, e.target.value);
+  render();
 };
 
 $todoList.onclick = e => {
   if (!e.target.classList.contains('destroy')) return;
-  removeTodo(e.target.closest('li').dataset.id);
+  Todo.removeTodo(e.target.closest('li').dataset.id);
+  render();
 };
 
 $filters.onclick = e => {
@@ -136,7 +97,11 @@ $filters.onclick = e => {
     $a.classList.toggle('selected', $a === e.target);
   });
 
-  setFilter(e.target.id);
+  Todo.setFilter(e.target.id);
+  render();
 };
 
-$clearCompleted.onclick = removeAllCompletedTodos;
+$clearCompleted.onclick = e => {
+  Todo.removeAllCompletedTodos();
+  render();
+};
