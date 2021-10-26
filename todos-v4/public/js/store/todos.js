@@ -1,3 +1,5 @@
+import { get } from '../utils/xhr.js';
+
 const store = {
   state: {
     todos: [],
@@ -33,11 +35,9 @@ const subscribe = listener => {
 };
 
 const fetchTodos = () => {
-  store.todos = [
-    { id: 3, content: 'JavaScript', completed: false },
-    { id: 2, content: 'CSS', completed: true },
-    { id: 1, content: 'HTML', completed: false },
-  ];
+  get('/todos', todos => {
+    store.todos = todos;
+  });
 };
 
 const toggleAllTodos = completed => {
