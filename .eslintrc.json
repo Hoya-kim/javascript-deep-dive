@@ -11,7 +11,8 @@
     "jest": true
   },
   "globals": {
-    "_": false
+    // "_": false,
+    "axios": true
   },
   "plugins": ["import", "html"],
   "extends": ["airbnb-base", "prettier"],
