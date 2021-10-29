@@ -38,83 +38,81 @@ const subscribe = listener => {
 };
 
 const fetchTodos = async () => {
-  // ajax
-  //   .get('/todos')
-  //   .then(todos => {
-  //     store.todos = todos;
-  //   })
-  //   .catch(console.error);
   try {
-    store.todos = await ajax.get('/todos');
+    const { data: todos } = await axios.get('/todos');
+    store.todos = todos;
   } catch (e) {
     console.error(e);
   }
 };
 
-// @TODO: change to async/await
-const toggleAllTodos = completed => {
+const toggleAllTodos = async completed => {
   // PATCH /todos { completed }
-  ajax
-    .patch('/todos', { completed })
-    .then(todos => {
-      store.todos = todos;
-    })
-    .catch(console.error);
+  try {
+    const { data: todos } = await axios.patch('/todos', { completed });
+    store.todos = todos;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 const generateId = () => Math.max(...store.todos.map(todo => todo.id), 0) + 1;
 
-const addTodo = content => {
+const addTodo = async content => {
   // POST /todos { id: generateId(), content, completed: false }
-  ajax
-    .post('/todos', { id: generateId(), content, completed: false })
-    .then(todos => {
-      store.todos = todos;
-    })
-    .catch(console.error);
+  try {
+    const { data: todos } = await axios.post('/todos', {
+      id: generateId(),
+      content,
+      completed: false,
+    });
+    store.todos = todos;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
-const toggleTodo = id => {
+const toggleTodo = async id => {
   const { completed } = store.todos.find(todo => todo.id === +id);
 
   // PATCH /todos/${id} { completed: !todo.completed }
-  ajax
-    .patch(`/todos/${id}`, { completed: !completed })
-    .then(todos => {
-      store.todos = todos;
-    })
-    .catch(console.error);
+  try {
+    const { data: todos } = await axios.patch(`/todos/${id}`, { completed: !completed });
+    store.todos = todos;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
-const updateTodoContent = (id, content) => {
+const updateTodoContent = async (id, content) => {
   // PATCH /todos/${id} { content }
-  ajax
-    .patch(`/todos/${id}`, { content })
-    .then(todos => {
-      store.todos = todos;
-    })
-    .catch(console.error);
+  try {
+    const { data: todos } = await axios.patch(`/todos/${id}`, { content });
+    store.todos = todos;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
-const removeTodo = id => {
+const removeTodo = async id => {
   // DELETE /todos/${id}
-  ajax
-    .delete(`/todos/${id}`)
-    .then(todos => {
-      store.todos = todos;
-    })
-    .catch(console.error);
+  try {
+    const { data: todos } = await axios.delete(`/todos/${id}`);
+    store.todos = todos;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
-const removeAllCompletedTodos = () => {
+const removeAllCompletedTodos = async () => {
   // @TODO : DELETE /todos?completed=true
   // DELETE /todos/completed
-  ajax
-    .delete('/todos/completed')
-    .then(todos => {
-      store.todos = todos;
-    })
-    .catch(console.error);
+  try {
+    const { data: todos } = await axios.delete('/todos/completed');
+    store.todos = todos;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 const setFilter = filter => {

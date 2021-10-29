@@ -1,3 +1,4 @@
+// axios쓰면 굳이 이렇게 만들 이유가 없음
 const ajax = {
   get(url) {
     return axios.get(url).then(({ data }) => data);
