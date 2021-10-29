@@ -1,0 +1,27 @@
+{
+  "name": "todos-v5",
+  "version": "1.0.0",
+  "scripts": {
+    "start:frontend": "webpack serve",
+    "start:backend": "nodemon server",
+    "build": "webpack -w"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.15.4",
+    "axios": "^0.24.0",
+    "core-js": "^3.19.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
+    "@babel/plugin-transform-runtime": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "babel-loader": "^8.2.3",
+    "html-webpack-plugin": "^5.5.0",
+    "nodemon": "^2.0.14",
+    "webpack": "^5.60.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0"
+  }
+}
